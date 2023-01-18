@@ -399,4 +399,15 @@ class PartnerInfoController extends Controller
         $data['pinfos'] = PartnerInfo::where('partner_status', $req->status)->get();
         return response()->json($data);
     }
+
+    /**
+     * Method to update partner status from partner-listing page
+     * using ajax request
+     */
+    public function updateStatus (Request $request) {
+        $partners = PartnerInfo::where('partner_id', $request->id)->update([
+            'partner_status' => $request->status
+        ]);
+        return response()->json($request->partner_id);
+    }
 }
