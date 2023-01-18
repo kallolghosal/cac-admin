@@ -24,6 +24,10 @@ Route::get('create-partner', [PartnerInfoController::class, 'create'])->name('cr
 Route::post('add-partner', [PartnerInfoController::class, 'store'])->name('add.partner');
 Route::get('add-new-partner', [PartnerInfoController::class, 'newpartner'])->name('new.partner');
 
+Route::get('/home', function () {
+    return "this is home";
+});
+
 // Routes for admin panel
 Route::group(['middleware' => 'auth'], function () {
     Route::get('registration', [CustomAuthController::class, 'registration'])->name('register-user');
