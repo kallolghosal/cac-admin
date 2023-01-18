@@ -1,0 +1,5 @@
+@import '../../node_modules/bootstrap';
+
+h1 {
+    font-size: 36px;
+}
