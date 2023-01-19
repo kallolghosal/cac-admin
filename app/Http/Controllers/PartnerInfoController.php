@@ -395,6 +395,11 @@ class PartnerInfoController extends Controller
         return view('auth.registeredpartner', ['partners' => $partners]);
     }
 
+    /**
+     * Method to filter partner data with status
+     * 
+     * Return json data
+     */
     public function statusFilter (Request $req) {
         $data['pinfos'] = PartnerInfo::where('partner_status', $req->status)->get();
         return response()->json($data);
