@@ -402,12 +402,13 @@ class PartnerInfoController extends Controller
 
     /**
      * Method to update partner status from partner-listing page
+     * 
      * using ajax request
      */
     public function updateStatus (Request $request) {
         $partners = PartnerInfo::where('partner_id', $request->id)->update([
             'partner_status' => $request->status
         ]);
-        return response()->json($request->partner_id);
+        return response()->json('success', 'Partner status updated successfully');
     }
 }
