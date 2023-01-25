@@ -138,7 +138,7 @@
                         </div>
                         <div class="col">
                             <label for="state">State</label>
-                            <select name="state" id="drstate" class="form-select @error('state') is-invalid @enderror">
+                            <select name="state[]" id="drstate" class="form-control @error('state') is-invalid @enderror" multiple data-live-search="true" title="Select State">
                                 <option>Select State</option>
                                 @foreach ($states as $state)
                                 <option value="{{ $state->id }}" {{ old('state') == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
@@ -149,7 +149,7 @@
                             @enderror
                             <br>
                             <label for="dist">District</label>
-                            <select name="drdist" id="drdist" class="form-select @error('state') is-invalid @enderror"></select>
+                            <select name="drdist[]" id="drdist" class="form-control @error('drdist') is-invalid @enderror" multiple data-live-search="true" title="Select District"></select>
                             @error('drdist')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
@@ -212,7 +212,7 @@
                         </div>
                         <div class="col">
                             <label for="">Node Status</label>
-                            <select class="form-select" name="nodestatus">
+                            <select class="form-control" name="nodestatus">
                                 <option selected>Select Node Status</option>
                                 @foreach ($checkops as $opk=>$opv)
                                     @if ($opv->check_ops == 'node_status')
@@ -265,70 +265,114 @@
     
     <script>
         $(document).ready(function() {
-            // State on function
-            $("#drstate").on('change', function () {
+
+            $('#drstate').selectpicker({
+                nonSelectedText: 'Select State',
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            });
+
+            $('#drdist').selectpicker({
+                nonSelectedText: 'Select District',
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            });
+
+            // State on change function
+            // $("#drstate").on('change', function () {
+            //     $.ajaxSetup({
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         }
+            //     });
+            //     var stateName = this.value;
+            //     alert(stateName);
+            //     $("#drdist").html('');
+            //     $.ajax({
+            //         url: "{{ url('get-district') }}",
+            //         type: "POST",
+            //         data: {
+            //             state_id: stateName,
+            //             _token: '{{csrf_token()}}'
+            //         },
+            //         dataType: 'json',
+            //         success: function (res) {
+            //             alert(res);
+            //             $('#drdist').html('<option value="">Select District</option>');
+            //             $.each(res.cities, function (key, value) {
+            //                 $("#drdist").append('<option value="' + value.id + '">' + value.name + '</option>');
+            //             });
+            //         },
+            //         error: function (xhr) {
+            //             console.log(xhr.responseText);
+            //         }
+            //     });
+            // });
+
+            // Load districts of selected states
+            $("#drstate").on('change', function() {
+                var stateId = $("#drstate").val();
+                console.log(stateId);
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                var stateName = this.value;
-                $("#drdist").html('');
+
                 $.ajax({
                     url: "{{ url('get-district') }}",
                     type: "POST",
                     data: {
-                        state_id: stateName,
+                        state_id: stateId,
                         _token: '{{csrf_token()}}'
                     },
                     dataType: 'json',
                     success: function (res) {
-                        //alert(res.cities[0].name);
-                        $('#drdist').html('<option value="">Select District</option>');
+                        $("#drdist").html('');
                         $.each(res.cities, function (key, value) {
-                            $("#drdist").append('<option value="' + value.id + '">' + value.name + '</option>');
-                            //console.log(value);
+                            $("#drdist").append('<option value="' + value.id + '" >' + value.name + '</option>');
                         });
+                        $("#drdist").selectpicker("refresh");
+                        $('.bs-select-all').html("All");
                     },
                     error: function (xhr) {
                         console.log(xhr.responseText);
                     }
                 });
             });
-
-            // Load districts of selected state
-            var stateId = $("#drstate").find(":selected").val();
-            var distname = $("#distname").val();
-            //alert(distname);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{ url('get-district') }}",
-                type: "POST",
-                data: {
-                    state_id: stateId,
-                    _token: '{{csrf_token()}}'
-                },
-                dataType: 'json',
-                success: function (res) {
-                    //alert(res.cities[0].name);
-                    $('#drdist').html('<option value="">Select District</option>');
-                    $.each(res.cities, function (key, value) {
-                        if (value.name == distname) {
-                            $("#drdist").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
-                        } else {
-                            $("#drdist").append('<option value="' + value.id + '" >' + value.name + '</option>');
-                        }
-                        //console.log(value);
-                    });
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
+            // var distname = $("#distname").val();
+            
+            // $.ajaxSetup({
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     }
+            // });
+            // $.ajax({
+            //     url: "{{ url('get-district') }}",
+            //     type: "POST",
+            //     data: {
+            //         state_id: stateId,
+            //         _token: '{{csrf_token()}}'
+            //     },
+            //     dataType: 'json',
+            //     success: function (res) {
+            //         //alert(res.cities[0].name);
+            //         $('#drdist').html('<option value="">Select District</option>');
+            //         $.each(res.cities, function (key, value) {
+            //             if (value.name == distname) {
+            //                 $("#drdist").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
+            //             } else {
+            //                 $("#drdist").append('<option value="' + value.id + '" >' + value.name + '</option>');
+            //             }
+            //             //console.log(value);
+            //         });
+            //     },
+            //     error: function (xhr) {
+            //         console.log(xhr.responseText);
+            //     }
+            // });
         });
     </script>
 </body>

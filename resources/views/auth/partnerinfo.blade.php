@@ -7,11 +7,11 @@
             <div class="col py-3">
                 <h4>CAC Partners</h4>
                 <br>
+                <h5>Filter By</h5>
                 <div class="row">
-                    <h5>Filter By</h5>
                     <div class="col">
                         <label for="state">State</label>
-                        <select name="state" id="state" class="form-select">
+                        <select name="state" id="state" class="form-control">
                             <option value='' selected>Select State</option>
                             @foreach ($states as $state)
                             <option value="{{$state->id}}">{{$state->name}}</option>
@@ -20,13 +20,13 @@
                     </div>
                     <div class="col">
                         <label for="dist">District</label>
-                        <select name="dist" id="dist" class="form-select">
+                        <select name="dist" id="dist" class="form-control">
                             <option value='' selected>Select District</option>
                         </select>
                     </div>
                     <div class="col">
                         <label for="org">Organisation Type</label>
-                        <select name="orgtype" id="orgtype" class="form-select">
+                        <select name="orgtype" id="orgtype" class="form-control">
                             <option value='' selected>Select Organisation Type</option>
                             @foreach ($orgtype as $checkop)
                             <option value="{{$checkop->check_val}}">{{$checkop->check_val}}</option>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="col">
                         <label for="pstatus">Partner Status</label>
-                        <select name="pstatus" id="pstatus" class="form-select">
+                        <select name="pstatus" id="pstatus" class="form-control">
                             <option value="" selected>Select Status</option>
                             <option value="y">Active</option>
                             <option value="n">Inactive</option>
@@ -62,7 +62,7 @@
                     <td>{{$partner->partner_id}}</td>
                     <td>{{$partner->portal_id}}</td>
                     <td>{{$partner->partner_name}}</td>
-                    <td>{{$partner->partner_status}}</td>
+                    <td>{{($partner->partner_status == 'y') ? 'Active' : 'Inactive'}}</td>
                     <td>{{$partner->created_at}}</td>
                     <td>
                         <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}">View</a> 

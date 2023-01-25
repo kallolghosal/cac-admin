@@ -234,15 +234,15 @@
                         </div>
                         <div class="col">
                             <label for="dist">State</label>
-                            <select name="state" id="drstate" class="form-select">
+                            <select name="state" id="drstate" class="form-control">
                                 <option>Select State</option>
                                 @foreach ($states as $state)
                                 <option value="{{ $state->id }}" <?php if($state->id == $pview[0]->State) { echo 'selected'; } ?>>{{ $state->name }}</option>
                                 @endforeach
                             </select>
                             <br>
-                            <label for="dist">District</label>
-                            <select name="drdist" id="drdist" class="form-select"></select>
+                            <label for="dist[]">District</label>
+                            <select name="drdist" id="drdist" class="form-control"></select>
                         </div>
                         <div class="col">
                             <label for="dist">POC Name</label>
@@ -305,7 +305,7 @@
                         </div>
                         <div class="col">
                             <label for="">Node Status</label>
-                            <select class="form-select" name="nodestatus">
+                            <select class="form-control" name="nodestatus">
                                 <option selected>Select Node Status</option>
                                 @foreach ($checkops as $opk=>$opv)
                                     @if ($opv->check_ops == 'node_status')
@@ -399,7 +399,7 @@
                 }
             });
             $.ajax({
-                url: "{{ url('get-district') }}",
+                url: "{{ url('get-district-list') }}",
                 type: "POST",
                 data: {
                     state_id: stateId,
@@ -407,7 +407,6 @@
                 },
                 dataType: 'json',
                 success: function (res) {
-                    //alert(res.cities[0].name);
                     $('#drdist').html('<option value="">Select District</option>');
                     $.each(res.cities, function (key, value) {
                         if (value.id == distname) {

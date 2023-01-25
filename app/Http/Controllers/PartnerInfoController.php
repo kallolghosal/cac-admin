@@ -36,8 +36,8 @@ class PartnerInfoController extends Controller
      */
     public function create()
     {
-        $checkops = DB::table('check_ops')->get();
-        $states = DB::table('states')->get();
+        $checkops = CheckOps::get();
+        $states = State::get();
         return view('createpartner', ['checkops' => $checkops, 'states' => $states]);
     }
 
@@ -49,80 +49,81 @@ class PartnerInfoController extends Controller
      */
     public function store(Request $request)
     {
-        $partnerInfo = new PartnerInfo;
-        $partnertype = new PartnerType;
-        $partneraddr = new PartnerAddr;
-        $partnerdesc = new PartnerDesc;
+        // $partnerInfo = new PartnerInfo;
+        // $partnertype = new PartnerType;
+        // $partneraddr = new PartnerAddr;
+        // $partnerdesc = new PartnerDesc;
 
-        $validatefields = $request->validate([
-            'partnername' => 'required',
-            'duedilligence' => 'required',
-            'orgtype' => 'required',
-            'categorytype' => 'required',
-            'vpcategory' => 'required',
-            'pritheme' => 'required',
-            'addr' => 'required',
-            'drdist' => 'required',
-            'state' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
-            'mou' => 'required',
-            'consent' => 'required'
-        ],[
-            'partnername.required' => 'Please enter name of partner',
-            'duedilligence.required' => 'Please select Due Diligence',
-            'orgtype.required' => 'Please select Organisation Type',
-            'categorytype.required' => 'Please select Category Type',
-            'vpcategory.required' => 'Please select VP Category',
-            'pritheme.required' => 'Please select Primary Theme',
-            'addr.required' => 'Please enter Address',
-            'drdist.required' => 'Please select District',
-            'state.required' => 'Please select State',
-            'email.required' => 'Please enter Email',
-            'mobile.required' => 'Please enter Mobile number'
-        ]);
+        // $validatefields = $request->validate([
+        //     'partnername' => 'required',
+        //     'duedilligence' => 'required',
+        //     'orgtype' => 'required',
+        //     'categorytype' => 'required',
+        //     'vpcategory' => 'required',
+        //     'pritheme' => 'required',
+        //     'addr' => 'required',
+        //     'drdist' => 'required',
+        //     'state' => 'required',
+        //     'email' => 'required',
+        //     'mobile' => 'required',
+        //     'mou' => 'required',
+        //     'consent' => 'required'
+        // ],[
+        //     'partnername.required' => 'Please enter name of partner',
+        //     'duedilligence.required' => 'Please select Due Diligence',
+        //     'orgtype.required' => 'Please select Organisation Type',
+        //     'categorytype.required' => 'Please select Category Type',
+        //     'vpcategory.required' => 'Please select VP Category',
+        //     'pritheme.required' => 'Please select Primary Theme',
+        //     'addr.required' => 'Please enter Address',
+        //     'drdist.required' => 'Please select District',
+        //     'state.required' => 'Please select State',
+        //     'email.required' => 'Please enter Email',
+        //     'mobile.required' => 'Please enter Mobile number'
+        // ]);
 
-        $partnerInfo->partner_name = $request->partnername;
-        $partnerInfo->save();
+        // $partnerInfo->partner_name = $request->partnername;
+        // $partnerInfo->save();
 
-        $partnerid = $partnerInfo->id;
+        // $partnerid = $partnerInfo->id;
 
-        $partnertype->partner_id = $partnerid;
-        $partnertype->due_diligence = implode(',',$request->duedilligence);
-        $partnertype->org_type = implode(',',$request->orgtype);
-        $partnertype->category_type = implode(',',$request->categorytype);
-        $partnertype->vp_category = implode(',',$request->vpcategory);
-        $partnertype->primary_theme = implode(',',$request->pritheme);
-        $partnertype->secondary_theme = implode(',',$request->sectheme);
-        $partnertype->founding_year = $request->foundingyear;
-        $partnertype->save();
+        // $partnertype->partner_id = $partnerid;
+        // $partnertype->due_diligence = implode(',',$request->duedilligence);
+        // $partnertype->org_type = implode(',',$request->orgtype);
+        // $partnertype->category_type = implode(',',$request->categorytype);
+        // $partnertype->vp_category = implode(',',$request->vpcategory);
+        // $partnertype->primary_theme = implode(',',$request->pritheme);
+        // $partnertype->secondary_theme = implode(',',$request->sectheme);
+        // $partnertype->founding_year = $request->foundingyear;
+        // $partnertype->save();
 
-        $partneraddr->partner_id = $partnerid;
-        $partneraddr->addr = $request->addr;
-        $partneraddr->district = $request->drdist;
-        $partneraddr->state = $request->state;
-        $partneraddr->poc_name = $request->pocname;
-        $partneraddr->poc_designation = $request->pocdesg;
-        $partneraddr->mobile = $request->mobile;
-        $partneraddr->email = $request->email;
-        $partneraddr->alt_poc_name = $request->altpocname;
-        $partneraddr->alt_poc_email = $request->altpocemail;
-        $partneraddr->alt_poc_mobile = $request->altpocmobile;
-        $partneraddr->website = $request->website;
-        $partneraddr->partner_bio = $request->partnerbio;
-        $partneraddr->save();
+        // $partneraddr->partner_id = $partnerid;
+        // $partneraddr->addr = $request->addr;
+        // $partneraddr->district = implode(',', $request->drdist);
+        // $partneraddr->state = implode(',', $request->state);
+        // $partneraddr->poc_name = $request->pocname;
+        // $partneraddr->poc_designation = $request->pocdesg;
+        // $partneraddr->mobile = $request->mobile;
+        // $partneraddr->email = $request->email;
+        // $partneraddr->alt_poc_name = $request->altpocname;
+        // $partneraddr->alt_poc_email = $request->altpocemail;
+        // $partneraddr->alt_poc_mobile = $request->altpocmobile;
+        // $partneraddr->website = $request->website;
+        // $partneraddr->partner_bio = $request->partnerbio;
+        // $partneraddr->save();
 
-        $partnerdesc->partner_id = $partnerid;
-        $partnerdesc->node_type = implode(',', $request->nodetype);
-        $partnerdesc->node_status = $request->nodestatus;
-        $partnerdesc->reach_per_year = $request->reachperyear;
-        $partnerdesc->hear_about_us = $request->hereaboutus;
-        $partnerdesc->referrals = $request->referrals;
-        $partnerdesc->mou_charter = $request->mou;
-        $partnerdesc->consent = $request->consent;
-        $partnerdesc->save();
+        // $partnerdesc->partner_id = $partnerid;
+        // $partnerdesc->node_type = implode(',', $request->nodetype);
+        // $partnerdesc->node_status = $request->nodestatus;
+        // $partnerdesc->reach_per_year = $request->reachperyear;
+        // $partnerdesc->hear_about_us = $request->hereaboutus;
+        // $partnerdesc->referrals = $request->referrals;
+        // $partnerdesc->mou_charter = $request->mou;
+        // $partnerdesc->consent = $request->consent;
+        // $partnerdesc->save();
 
-        return \Redirect::route('new.partner');
+        // return \Redirect::route('new.partner');
+        return $request;
     }
 
     /**
@@ -274,8 +275,23 @@ class PartnerInfoController extends Controller
         return view('auth.partneredit', $data);
     }
 
+    /**
+     * Method to load list of districts in create-partner page
+     * for multiselect dropdown list
+     */
     public function getDistrict(Request $request) {
-        $data['cities'] = DB::table('districts')->where('state_id', $request->state_id)->get();
+        $data['cities'] = City::whereIn('state_id', $request->state_id)->get();
+        return response()->json($data);
+        //return $request;
+    }
+
+    /**
+     * Method to load list of districts in partner-edit page
+     * 
+     * with selected district
+     */
+    public function getDistrictList (Request $request) {
+        $data['cities'] = City::where('state_id', $request->state_id)->get();
         return response()->json($data);
     }
 

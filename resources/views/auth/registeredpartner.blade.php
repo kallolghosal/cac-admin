@@ -25,7 +25,7 @@
                     <td>{{$partner->partner_id}}</td>
                     <td>{{$partner->portal_id}}</td>
                     <td>{{$partner->partner_name}}</td>
-                    <td>{{$partner->partner_status}}</td>
+                    <td>{{($partner->partner_status == 'y') ? 'Active' : 'Inactive'}}</td>
                     <td>{{$partner->created_at}}</td>
                     <td>
                         <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}">View</a> 

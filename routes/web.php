@@ -18,6 +18,7 @@ Route::post('custom-login', [CustomAuthController::class, 'customLogin'])->name(
 
 
 Route::post('get-district', [PartnerInfoController::class, 'getDistrict']);
+Route::post('get-district-list', [PartnerInfoController::class, 'getDistrictList']);
 
 // Routes for creating new partners
 Route::get('create-partner', [PartnerInfoController::class, 'create'])->name('create.partner');
@@ -25,7 +26,7 @@ Route::post('add-partner', [PartnerInfoController::class, 'store'])->name('add.p
 Route::get('add-new-partner', [PartnerInfoController::class, 'newpartner'])->name('new.partner');
 
 Route::get('/home', function () {
-    return "this is home";
+    return view('test');
 });
 
 // Routes for admin panel
@@ -52,4 +53,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('inactive-partners', [PartnerInfoController::class, 'inactivePartners'])->name('partners.inactive');
     Route::get('registered-partners', [PartnerInfoController::class, 'registeredPartners'])->name('partners.registered');
     Route::post('active', [PartnerInfoController::class, 'statusFilter'])->name('statusfilter');
+    Route::get('about/{id}/{val}', function ($id, $val) {
+        for ($i=1;$i<$id;$i++) {
+            for ($j=0;$j<$i;$j++) {
+                echo $val;
+            }
+            echo '</br>';
+        }
+    });
 });
