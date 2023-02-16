@@ -7,6 +7,7 @@ use App\Models\PartnerAddr;
 use App\Models\PartnerDesc;
 use App\Models\PartnerType;
 use App\Models\CheckOps;
+use App\Models\PartnerMaster;
 use App\Models\State;
 use App\Models\City;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class PartnerInfoController extends Controller
      */
     public function index()
     {
-        $partners = PartnerInfo::paginate(10);
+        $partners = PartnerMaster::paginate(10);
         $states = State::get();
         $checkops = CheckOps::where('check_ops', 'org_type')->get();
         return view('auth.partnerinfo', ['partners' => $partners, 'states' => $states, 'orgtype' => $checkops]);
@@ -49,81 +50,71 @@ class PartnerInfoController extends Controller
      */
     public function store(Request $request)
     {
-        // $partnerInfo = new PartnerInfo;
-        // $partnertype = new PartnerType;
-        // $partneraddr = new PartnerAddr;
-        // $partnerdesc = new PartnerDesc;
+        $pMaster = new PartnerMaster;
 
-        // $validatefields = $request->validate([
-        //     'partnername' => 'required',
-        //     'duedilligence' => 'required',
-        //     'orgtype' => 'required',
-        //     'categorytype' => 'required',
-        //     'vpcategory' => 'required',
-        //     'pritheme' => 'required',
-        //     'addr' => 'required',
-        //     'drdist' => 'required',
-        //     'state' => 'required',
-        //     'email' => 'required',
-        //     'mobile' => 'required',
-        //     'mou' => 'required',
-        //     'consent' => 'required'
-        // ],[
-        //     'partnername.required' => 'Please enter name of partner',
-        //     'duedilligence.required' => 'Please select Due Diligence',
-        //     'orgtype.required' => 'Please select Organisation Type',
-        //     'categorytype.required' => 'Please select Category Type',
-        //     'vpcategory.required' => 'Please select VP Category',
-        //     'pritheme.required' => 'Please select Primary Theme',
-        //     'addr.required' => 'Please enter Address',
-        //     'drdist.required' => 'Please select District',
-        //     'state.required' => 'Please select State',
-        //     'email.required' => 'Please enter Email',
-        //     'mobile.required' => 'Please enter Mobile number'
-        // ]);
+        $validatefields = $request->validate([
+            'partnername' => 'required',
+            'duedilligence' => 'required',
+            'orgtype' => 'required',
+            'categorytype' => 'required',
+            'vpcategory' => 'required',
+            'pritheme' => 'required',
+            'sectheme' => 'required',
+            'addr' => 'required',
+            'regoffice' => 'required',
+            'drdist' => 'required',
+            'state' => 'required',
+            'email' => 'required',
+            'mobile' => 'required',
+            'mou' => 'required',
+            'consent' => 'required'
+        ],[
+            'partnername.required' => 'Please enter name of partner',
+            'duedilligence.required' => 'Please select Due Diligence',
+            'orgtype.required' => 'Please select Organisation Type',
+            'categorytype.required' => 'Please select Category Type',
+            'vpcategory.required' => 'Please select VP Category',
+            'pritheme.required' => 'Please select Primary Theme',
+            'sectheme.required' => 'Please select Secondary Theme',
+            'addr.required' => 'Please enter Communication Address',
+            'regoffice.required' => 'Please enter Registered Office Address',
+            'drdist.required' => 'Please select District',
+            'state.required' => 'Please select State',
+            'email.required' => 'Please enter Email',
+            'mobile.required' => 'Please enter Mobile number'
+        ]);
 
-        // $partnerInfo->partner_name = $request->partnername;
-        // $partnerInfo->save();
+        $pMaster->partner_name = $request->partnername;
+        $pMaster->due_diligence = implode(',',$request->duedilligence);
+        $pMaster->organization_type = implode(',',$request->orgtype);
+        $pMaster->category_type = implode(',',$request->categorytype);
+        $pMaster->vp_category = implode(',',$request->vpcategory);
+        $pMaster->primary_theme = implode(',',$request->pritheme);
+        $pMaster->secondary_theme = implode(',',$request->sectheme);
+        $pMaster->founding_year = $request->foundingyear;
+        $pMaster->communication_address = $request->addr;
+        $pMaster->registered_office = $request->regoffice;
+        $pMaster->district = implode(',', $request->drdist);
+        $pMaster->state = implode(',', $request->state);
+        $pMaster->poc_name = $request->pocname;
+        $pMaster->poc_designation = $request->pocdesg;
+        $pMaster->alt_poc_designation = $request->altpocdesg;
+        $pMaster->mobile = $request->mobile;
+        $pMaster->email = $request->email;
+        $pMaster->alt_poc_name = $request->altpocname;
+        $pMaster->alt_poc_email = $request->altpocemail;
+        $pMaster->alt_poc_phone = $request->altpocmobile;
+        $pMaster->website = $request->website;
+        $pMaster->partner_bio = $request->partnerbio;
+        $pMaster->reach_per_year = $request->reachperyear;
+        $pMaster->hear_about_us = $request->hereaboutus;
+        $pMaster->referrals = $request->referrals;
+        $pMaster->mou_charter = $request->mou;
+        $pMaster->consent = $request->consent;
+        $pMaster->save();
 
-        // $partnerid = $partnerInfo->id;
-
-        // $partnertype->partner_id = $partnerid;
-        // $partnertype->due_diligence = implode(',',$request->duedilligence);
-        // $partnertype->org_type = implode(',',$request->orgtype);
-        // $partnertype->category_type = implode(',',$request->categorytype);
-        // $partnertype->vp_category = implode(',',$request->vpcategory);
-        // $partnertype->primary_theme = implode(',',$request->pritheme);
-        // $partnertype->secondary_theme = implode(',',$request->sectheme);
-        // $partnertype->founding_year = $request->foundingyear;
-        // $partnertype->save();
-
-        // $partneraddr->partner_id = $partnerid;
-        // $partneraddr->addr = $request->addr;
-        // $partneraddr->district = implode(',', $request->drdist);
-        // $partneraddr->state = implode(',', $request->state);
-        // $partneraddr->poc_name = $request->pocname;
-        // $partneraddr->poc_designation = $request->pocdesg;
-        // $partneraddr->mobile = $request->mobile;
-        // $partneraddr->email = $request->email;
-        // $partneraddr->alt_poc_name = $request->altpocname;
-        // $partneraddr->alt_poc_email = $request->altpocemail;
-        // $partneraddr->alt_poc_mobile = $request->altpocmobile;
-        // $partneraddr->website = $request->website;
-        // $partneraddr->partner_bio = $request->partnerbio;
-        // $partneraddr->save();
-
-        // $partnerdesc->partner_id = $partnerid;
-        // $partnerdesc->node_type = implode(',', $request->nodetype);
-        // $partnerdesc->node_status = $request->nodestatus;
-        // $partnerdesc->reach_per_year = $request->reachperyear;
-        // $partnerdesc->hear_about_us = $request->hereaboutus;
-        // $partnerdesc->referrals = $request->referrals;
-        // $partnerdesc->mou_charter = $request->mou;
-        // $partnerdesc->consent = $request->consent;
-        // $partnerdesc->save();
-
-        // return \Redirect::route('new.partner');
-        return $request;
+        return \Redirect::route('new.partner');
+        //return $request;
     }
 
     /**
@@ -134,21 +125,28 @@ class PartnerInfoController extends Controller
      */
     public function show($id)
     {
-        if (Auth::check()) {
-            //$partner = DB::table('partnerinfos')->where('partner_id', $id)->get();
-            $partner = DB::table('partnerinfos')
-                                ->join('partner_types', 'partnerinfos.partner_id', '=', 'partner_types.partner_id')
-                                ->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-                                ->join('partner_desc', 'partnerinfos.partner_id', '=', 'partner_desc.partner_id')
-                                ->select('partnerinfos.partner_id', 'partnerinfos.portal_id as Portal ID', 'partnerinfos.partner_name as Partner Name', 'partnerinfos.engagement_lead as Engagement Lead', 'partnerinfos.partner_status as Status', 'partnerinfos.created_at as Created At', 
-                                'partner_types.due_diligence as Due Diligence', 'partner_types.stakeholder_type as Stakeholder Type', 'partner_types.partner_type as Partner Type', 'partner_types.org_type as Organisation Type', 'partner_types.category_type as Category Type', 'partner_types.vp_category as VP Category', 'partner_types.primary_theme as Primary Theme', 'partner_types.secondary_theme as Secondary Theme', 'partner_types.founding_year as Founding Year', 
-                                'partner_addrs.addr as Address', 'partner_addrs.district as District', 'partner_addrs.state as State', 'partner_addrs.poc_name as POC Name', 'partner_addrs.poc_designation as POC Designation', 'partner_addrs.mobile as Mobile', 'partner_addrs.email as Email', 'partner_addrs.alt_poc_name as Alternate POC Name', 'partner_addrs.alt_poc_email as Alternate POC Email', 'partner_addrs.alt_poc_mobile as Alternate POC Mobile', 'partner_addrs.website as Website', 'partner_addrs.partner_bio as Partner BIO', 
-                                'partner_desc.node_type as Node Type', 'partner_desc.node_status as Node Status', 'partner_desc.reach_per_year as Reach Per Year', 'partner_desc.hear_about_us as Here About Us', 'partner_desc.referrals as Referrals', 'partner_desc.mou_charter as MOU Charter')
-                                ->where('partnerinfos.partner_id', $id)
-                                ->get();
-            return view('auth.partnerview', ['pview' => $partner]);
-        }
-        return redirect("login")->withErrors('Please login to see the page');
+        $partner = PartnerMaster::where('partner_id', $id)->get();
+        return view('auth.partnerview', ['pview' => $partner]);
+    }
+
+    /**
+     * Method to show comma separated
+     * names of states in partner-view page
+     */
+    public static function getStateNames ($ids) {
+        $ids = explode(',', $ids);
+        $stnames = State::select(DB::raw('CONCAT(name) as state'))->whereIn('id', $ids)->get();
+        return $stnames;
+    }
+
+    /**
+     * Method to show comma separated
+     * names of districts in partner-view page
+     */
+    public static function getDistrictNames ($ids) {
+        $ids = explode(',', $ids);
+        $distnames = City::select(DB::raw('CONCAT(name) as district'))->whereIn('id', $ids)->get();
+        return $distnames;
     }
 
     /**
@@ -160,18 +158,9 @@ class PartnerInfoController extends Controller
     public function edit($id)
     {
         if (Auth::check()) {
-            $partner = DB::table('partnerinfos')
-                                ->join('partner_types', 'partnerinfos.partner_id', '=', 'partner_types.partner_id')
-                                ->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-                                ->join('partner_desc', 'partnerinfos.partner_id', '=', 'partner_desc.partner_id')
-                                ->select('partnerinfos.partner_id', 'partnerinfos.portal_id', 'partnerinfos.partner_name', 'partnerinfos.engagement_lead', 'partnerinfos.partner_status', 'partnerinfos.created_at', 
-                                'partner_types.due_diligence', 'partner_types.stakeholder_type', 'partner_types.partner_type', 'partner_types.org_type', 'partner_types.category_type', 'partner_types.vp_category', 'partner_types.primary_theme', 'partner_types.secondary_theme', 'partner_types.founding_year', 
-                                'partner_addrs.addr', 'partner_addrs.district as District', 'partner_addrs.state as State', 'partner_addrs.poc_name', 'partner_addrs.poc_designation', 'partner_addrs.mobile as Mobile', 'partner_addrs.email as Email', 'partner_addrs.alt_poc_name', 'partner_addrs.alt_poc_email', 'partner_addrs.alt_poc_mobile', 'partner_addrs.website', 'partner_addrs.partner_bio', 
-                                'partner_desc.node_type', 'partner_desc.node_status', 'partner_desc.reach_per_year', 'partner_desc.hear_about_us', 'partner_desc.referrals', 'partner_desc.mou_charter as MOU Charter')
-                                ->where('partnerinfos.partner_id', $id)
-                                ->get();
-            $states = DB::table('states')->get();
-            $checkops = DB::table('check_ops')->get();
+            $partner = PartnerMaster::where('partner_id', $id)->get();
+            $states = State::get();
+            $checkops = CheckOps::get();
             return view('auth.partneredit')->with('pview', $partner)->with('states', $states)->with('checkops', $checkops);
         }
         return redirect("login")->withErrors('Please login to see the page');
@@ -187,19 +176,7 @@ class PartnerInfoController extends Controller
     public function update(Request $req)
     {
         if (Auth::check()) {
-            $partnerInfo = new PartnerInfo;
-            $partnertype = new PartnerType;
-            $partneraddr = new PartnerAddr;
-            $partnerdesc = new PartnerDesc;
-
-            $partnerInfo
-                ->where('partner_id', $req->partnerid)
-                ->update([
-                    'partner_name' => $req->partnername, 
-                    'engagement_lead' => $req->englead, 
-                    'partner_status' => $req->pstatus,
-                    'portal_id' => $req->portalid
-                ]);
+            $partnerMaster = new PartnerMaster;
 
             if ($req->stakeholdertype == '') {
                 $stakeholdertype = '';
@@ -212,41 +189,57 @@ class PartnerInfoController extends Controller
             } else {
                 $partnertypadata = implode(',',$req->partnertype);
             }
-            $partnertype
+
+            if ($req->pritheme == '') {
+                $pritheme = '';
+            } else {
+                $pritheme = implode(',', $req->pritheme);
+            }
+
+            if ($req->sectheme == '') {
+                $sectheme = '';
+            } else {
+                $sectheme = implode(',', $req->sectheme);
+            }
+
+            if ($req->nodetype == '') {
+                $nodetype = '';
+            } else {
+                $nodetype = implode(',', $req->nodetype);
+            }
+
+            $partnerMaster
                 ->where('partner_id', $req->partnerid)
                 ->update([
+                    'partner_name' => $req->partnername, 
+                    'engagement_lead' => $req->englead, 
+                    'status' => $req->pstatus,
+                    'portal_id' => $req->portalid,
                     'due_diligence' => implode(',',$req->duedilligence), 
                     'stakeholder_type' => $stakeholdertype, 
                     'partner_type' => $partnertypadata, 
-                    'org_type' => implode(',',$req->orgtype), 
+                    'organization_type' => implode(',',$req->orgtype), 
                     'category_type' => implode(',',$req->categorytype),
                     'vp_category' => implode(',',$req->vpcategory), 
-                    'primary_theme' => implode(',',$req->pritheme), 
-                    'secondary_theme' => implode(',',$req->sectheme), 
-                    'founding_year' => $req->foundingyear
-                ]);
-
-            $partneraddr
-                ->where('partner_id', $req->partnerid)
-                ->update([
-                    'addr' => $req->addr,
-                    'district' => $req->drdist,
-                    'state' => $req->state,
+                    'primary_theme' => $pritheme, 
+                    'secondary_theme' => $sectheme, 
+                    'founding_year' => $req->foundingyear,
+                    'registered_office' => $req->regoffice,
+                    'communication_address' => $req->commaddr,
+                    'district' => implode(',',$req->drdist),
+                    'state' => implode(',',$req->state),
                     'poc_name' => $req->pocname,
                     'poc_designation' => $req->pocdesg,
+                    'alt_poc' => $req->altpoc,
                     'mobile' => $req->mobile,
                     'email' => $req->email,
                     'alt_poc_name' => $req->altpocname,
                     'alt_poc_email' => $req->altpocemail,
-                    'alt_poc_mobile' => $req->altpocmobile,
+                    'alt_poc_phone' => $req->altpocmobile,
+                    'alt_poc_designation' => $req->altpocdesig,
                     'website' => $req->website,
-                    'partner_bio' => $req->partnerbio
-                ]);
-
-            $partnerdesc
-                ->where('partner_id', $req->partnerid)
-                ->update([
-                    'node_type' => implode(',',$req->nodetype),
+                    'partner_bio' => $req->partnerbio,
+                    'node_type' => $nodetype,
                     'node_status' => $req->nodestatus,
                     'reach_per_year' => $req->reachperyear,
                     'hear_about_us' => $req->hereaboutus,
@@ -265,7 +258,7 @@ class PartnerInfoController extends Controller
      * @param  \App\Models\PartnerInfo  $partnerInfo
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PartnerInfo $partnerInfo)
+    public function destroy(PartnerMaster $partnerMaster)
     {
         //
     }
@@ -282,7 +275,6 @@ class PartnerInfoController extends Controller
     public function getDistrict(Request $request) {
         $data['cities'] = City::whereIn('state_id', $request->state_id)->get();
         return response()->json($data);
-        //return $request;
     }
 
     /**
@@ -335,50 +327,26 @@ class PartnerInfoController extends Controller
     }
 
     public function filterState (Request $request) {
-        $data['pinfos'] = DB::table('partnerinfos')->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-            ->select('partnerinfos.*')->where('partner_addrs.state', $request->stid)->get();
-        
-        $data['dists'] = City::where('state_id', $request->stid)->get();
+        $data['pinfos'] = PartnerMaster::whereIn('state', $request->stid)->get();
+        $data['dists'] = City::whereIn('state_id', $request->stid)->get();
         return response()->json($data);
     }
 
     public function orgFilter (Request $request) {
         $data = [];
         if (array_key_exists('statid', $request->stid[0]) && array_key_exists('distid', $request->stid[0]) && array_key_exists('org', $request->stid[0])) {
-            $data['pinfos'] = DB::table('partnerinfos')
-                ->join('partner_types', 'partnerinfos.partner_id', '=', 'partner_types.partner_id')
-                ->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-                ->select('partnerinfos.*')
-                ->where('partner_addrs.state', $request->stid[0]["statid"])
-                ->where('partner_addrs.district', $request->stid[0]["distid"])
-                ->whereRaw("find_in_set('".$request->stid[0]['org']."', partner_types.org_type)")
-                ->get();
-        } elseif (array_key_exists('statid', $request->stid[0]) && array_key_exists('org', $request->stid[0])) {
-            $data['pinfos'] = DB::table('partnerinfos')
-                ->join('partner_types', 'partnerinfos.partner_id', '=', 'partner_types.partner_id')
-                ->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-                ->select('partnerinfos.*')
-                ->where('partner_addrs.state', $request->stid[0]["statid"])
-                ->whereRaw("find_in_set('".$request->stid[0]['org']."', partner_types.org_type)")
-                ->get();
-        } elseif (array_key_exists('org', $request->stid[0])) {
-            $data['pinfos'] = DB::table('partnerinfos')
-                ->join('partner_types', 'partnerinfos.partner_id', '=', 'partner_types.partner_id')
-                ->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-                ->select('partnerinfos.*')
-                ->whereRaw("find_in_set('".$request->stid[0]['org']."', partner_types.org_type)")
-                ->get();
+            $data['pinfos'] = PartnerMaster::where('state', $request->stid[0]["statid"])->where('district', $request->stid[0]["distid"])->where('organization_type', $request->stid[0]['org'])->get();
+        } else if (array_key_exists('statid', $request->stid[0]) && array_key_exists('org', $request->stid[0])) {
+            $data['pinfos'] = PartnerMaster::where('state', $request->stid[0]["statid"])->where('organization_type', $request->stid[0]['org'])->get();
+        } else if (array_key_exists('org', $request->stid[0])) {
+            $data['pinfos'] = PartnerMaster::where('organization_type', $request->stid[0]['org'])->get();
         }
         
         return response()->json($data);
     }
 
     public function stateDistFilter (Request $request) {
-        $data['infos'] = DB::table('partnerinfos')->join('partner_addrs', 'partnerinfos.partner_id', '=', 'partner_addrs.partner_id')
-            ->select('partnerinfos.*')->where([
-                ['partner_addrs.state', $request->statid],
-                ['partner_addrs.district', $request->distid]
-            ])->get();
+        $data['infos'] = PartnerMaster::where('state', $request->statid)->where('district', $request->distid)->get();
         return response()->json($data);
     }
 
@@ -395,19 +363,19 @@ class PartnerInfoController extends Controller
     }
 
     public function activePartners () {
-        $partners = PartnerInfo::where('partner_status', 'y')->paginate(10);
+        $partners = PartnerMaster::where('status', 'y')->paginate(10);
         $states = State::get();
         $checkops = CheckOps::where('check_ops', 'org_type')->get();
         return view('auth.activepartner', ['partners' => $partners, 'states' => $states, 'orgtype' => $checkops]);
     }
 
     public function inactivePartners () {
-        $partners = PartnerInfo::where('partner_status', 'n')->paginate(10);
+        $partners = PartnerMaster::where('status', 'p')->paginate(10);
         return view('auth.inactivepartner', ['partners' => $partners]);
     }
 
     public function registeredPartners () {
-        $partners = PartnerInfo::paginate(10);
+        $partners = PartnerMaster::paginate(10);
         return view('auth.registeredpartner', ['partners' => $partners]);
     }
 
@@ -417,8 +385,20 @@ class PartnerInfoController extends Controller
      * Return json data
      */
     public function statusFilter (Request $req) {
-        $data['pinfos'] = PartnerInfo::where('partner_status', $req->status)->get();
+        $data['pinfos'] = PartnerMaster::where('status', $req->status)->get();
         return response()->json($data);
+    }
+
+    /**
+     * Method to update status
+     * 
+     * from partnerinfo page
+     */
+    public function statusAction (Request $request) {
+        $pstatus = PartnerMaster::where('partner_id', $request->pid)->update([
+            'status' => $request->act
+        ]);
+        return response()->json(['accept' => 'Partner status updated successfully']);
     }
 
     /**
@@ -427,8 +407,8 @@ class PartnerInfoController extends Controller
      * using ajax request
      */
     public function updateStatus (Request $request) {
-        $partners = PartnerInfo::where('partner_id', $request->id)->update([
-            'partner_status' => $request->status
+        $partners = PartnerMaster::where('partner_id', $request->id)->update([
+            'status' => $request->status
         ]);
         return response()->json('success', 'Partner status updated successfully');
     }

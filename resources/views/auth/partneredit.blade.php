@@ -27,8 +27,10 @@
                         <div class="col">
                             <label for="pstatus">Partner Status</label>
                             <select name="pstatus" id="" class="form-control">
-                                <option value="y" {{ ($pview[0]->partner_status == 'y') ? 'selected' : '' }}>Active</option>
-                                <option value="n" {{ ($pview[0]->partner_status == 'n') ? 'selected' : '' }}>Inactive</option>
+                                <option value="y" {{ ($pview[0]->status == 'y') ? 'selected' : '' }}>Active</option>
+                                <option value="n" {{ ($pview[0]->status == 'n') ? 'selected' : '' }}>Inactive</option>
+                                <option value="p" {{ ($pview[0]->status == 'p') ? 'selected' : '' }}>Pending</option>
+                                <option value="d" {{ ($pview[0]->status == 'd') ? 'selected' : '' }}>Deleted</option>
                             </select>
                         </div>
                         <div class="col">
@@ -112,14 +114,14 @@
                                 @if ($opv->check_ops == 'org_type')
                                     @if (strpos($pview[0]->org_type, ','))
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ $opv->check_val }}" name="orgtype[]" {{ (in_array($opv->check_val, explode(',', $pview[0]->org_type))) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" value="{{ $opv->check_val }}" name="orgtype[]" {{ (in_array($opv->check_val, explode(',', $pview[0]->organization_type))) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             {{ $opv->check_val }}
                                         </label>
                                     </div>
                                     @else
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ $opv->check_val }}" name="orgtype[]" {{ ($pview[0]->org_type == $opv->check_val) ? 'checked' : '' }}>
+                                        <input class="form-check-input" type="checkbox" value="{{ $opv->check_val }}" name="orgtype[]" {{ ($pview[0]->organization_type == $opv->check_val) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="flexCheckDefault">
                                             {{ $opv->check_val }}
                                         </label>
@@ -229,20 +231,23 @@
                     <hr class="hr" />
                     <div class="row">
                         <div class="col">
-                            <label for="addr">Address</label>
-                            <textarea name="addr" id="" cols="30" rows="10" class="form-control">{{ $pview[0]->addr }}</textarea>
+                            <label for="addr">Registered Office</label>
+                            <textarea name="regoffice" id="" cols="30" rows="6" class="form-control">{{ $pview[0]->registered_office }}</textarea>
+                            <br>
+                            <label for="addr">Communication Address</label>
+                            <textarea name="commaddr" id="" cols="30" rows="6" class="form-control">{{ $pview[0]->communication_address }}</textarea>
                         </div>
                         <div class="col">
                             <label for="dist">State</label>
-                            <select name="state" id="drstate" class="form-control">
+                            <select name="state[]" id="drstate" class="form-control" multiple data-live-search="true">
                                 <option>Select State</option>
                                 @foreach ($states as $state)
-                                <option value="{{ $state->id }}" <?php if($state->id == $pview[0]->State) { echo 'selected'; } ?>>{{ $state->name }}</option>
+                                <option value="{{ $state->id }}" {{ (in_array($state->id, explode(',', $pview[0]->state))) ? 'selected' : '' }}>{{ $state->name }}</option>
                                 @endforeach
                             </select>
                             <br>
-                            <label for="dist[]">District</label>
-                            <select name="drdist" id="drdist" class="form-control"></select>
+                            <label for="dist">District</label>
+                            <select name="drdist[]" id="drdist" class="form-control" multiple data-live-search="true"></select>
                         </div>
                         <div class="col">
                             <label for="dist">POC Name</label>
@@ -256,19 +261,25 @@
                             <br>
                             <label for="dist">Website</label>
                             <input type="text" name="website" id="" class="form-control" value="{{$pview[0]->website}}">
+                            <br>
+                            <label for="dist">Alternate POC</label>
+                            <input type="text" name="altpoc" id="" class="form-control" value="{{$pview[0]->alt_poc}}">
                         </div>
                         <div class="col">
                             <label for="dist">Email</label>
-                            <input type="email" name="email" id="" class="form-control" value="{{$pview[0]->Email}}">
+                            <input type="email" name="email" id="" class="form-control" value="{{$pview[0]->email}}">
                             <br>
                             <label for="dist">Mobile</label>
-                            <input type="text" name="mobile" id="" class="form-control" value="{{$pview[0]->Mobile}}">
+                            <input type="text" name="mobile" id="" class="form-control" value="{{$pview[0]->mobile}}">
                             <br>
                             <label for="dist">Alternate POC Email</label>
                             <input type="email" name="altpocemail" id="" class="form-control" value="{{$pview[0]->alt_poc_email}}">
                             <br>
                             <label for="dist">Alternate POC Mobile</label>
                             <input type="text" name="altpocmobile" id="" class="form-control" value="{{$pview[0]->alt_poc_mobile}}">
+                            <br>
+                            <label for="dist">Alternate POC Designation</label>
+                            <input type="text" name="altpocdesig" id="" class="form-control" value="{{$pview[0]->alt_poc_designation}}">
                         </div>
                     </div>
                     <br>
@@ -358,14 +369,29 @@
     
     <script>
         $(document).ready(function() {
-            // State on function
+            $('#drstate').selectpicker({
+                nonSelectedText: 'Select State',
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            });
+
+            $('#drdist').selectpicker({
+                nonSelectedText: 'Select District',
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true
+            });
+
+            // State on change function
             $("#drstate").on('change', function () {
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     }
                 });
-                var stateName = this.value;
+                var stateName = $("#drstate").val();
+                //alert(stateName);
                 $("#drdist").html('');
                 $.ajax({
                     url: "{{ url('get-district') }}",
@@ -376,12 +402,13 @@
                     },
                     dataType: 'json',
                     success: function (res) {
-                        //alert(res.cities[0].name);
-                        $('#drdist').html('<option value="">Select District</option>');
+                       
                         $.each(res.cities, function (key, value) {
                             $("#drdist").append('<option value="' + value.id + '">' + value.name + '</option>');
                             //console.log(value);
                         });
+                        $("#drdist").selectpicker("refresh");
+                        $('.bs-select-all').html("All");
                     },
                     error: function (xhr) {
                         console.log(xhr.responseText);
@@ -390,16 +417,14 @@
             });
 
             // Load districts of selected state
-            var stateId = $("#drstate").find(":selected").val();
-            var distname = $("#distname").val();
-            //alert(distname);
+            var stateId = $("#drstate").val();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
             $.ajax({
-                url: "{{ url('get-district-list') }}",
+                url: "{{ url('get-district') }}",
                 type: "POST",
                 data: {
                     state_id: stateId,
@@ -407,15 +432,18 @@
                 },
                 dataType: 'json',
                 success: function (res) {
-                    $('#drdist').html('<option value="">Select District</option>');
+                    var stids = "{{$pview[0]->district}}";
+                    //alert(stids.split(','));
                     $.each(res.cities, function (key, value) {
-                        if (value.id == distname) {
-                            $("#drdist").append('<option value="' + value.id + '" selected="selected">' + value.name + '</option>');
+                        if (stids.indexOf(value.id) != -1) {
+                            $("#drdist").append('<option value="' + value.id + '" selected>' + value.name + '</option>');
                         } else {
-                            $("#drdist").append('<option value="' + value.id + '" >' + value.name + '</option>');
+                            $("#drdist").append('<option value="' + value.id + '">' + value.name + '</option>');
                         }
-                        //console.log(value);
+                        
                     });
+                    $("#drdist").selectpicker("refresh");
+                    $('.bs-select-all').html("All");
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);

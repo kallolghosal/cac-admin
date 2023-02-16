@@ -50,9 +50,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('partner-state-dist', [PartnerInfoController::class, 'stateDistFilter'])->name('partner.statedist');
     Route::post('partner-state-dist-org', [PartnerInfoController::class, 'stateDistOrgFilter'])->name('partner.stateDistOrg');
     Route::get('active-partners', [PartnerInfoController::class, 'activePartners'])->name('partners.active');
-    Route::get('inactive-partners', [PartnerInfoController::class, 'inactivePartners'])->name('partners.inactive');
+    Route::get('pending-partners', [PartnerInfoController::class, 'inactivePartners'])->name('partners.inactive');
     Route::get('registered-partners', [PartnerInfoController::class, 'registeredPartners'])->name('partners.registered');
     Route::post('active', [PartnerInfoController::class, 'statusFilter'])->name('statusfilter');
+    Route::post('statusAction', [PartnerInfoController::class, 'statusAction'])->name('statusAction');
     Route::get('about/{id}/{val}', function ($id, $val) {
         for ($i=1;$i<$id;$i++) {
             for ($j=0;$j<$i;$j++) {

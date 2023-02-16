@@ -11,9 +11,9 @@
                 <table class="table table-bordered" id="pinfos">
                     <thead>
                         <tr>
-                            <td>ID</td>
                             <td>Portal ID</td>
                             <td>Name</td>
+                            <td>State</td>
                             <td>Status</td>
                             <td>Created Dt</td>
                             <td>Action</td>
@@ -22,14 +22,22 @@
                     
                     @foreach ($partners as $partner)
                     <tr>
-                    <td>{{$partner->partner_id}}</td>
                     <td>{{$partner->portal_id}}</td>
                     <td>{{$partner->partner_name}}</td>
-                    <td>{{($partner->partner_status == 'y') ? 'Active' : 'Inactive'}}</td>
-                    <td>{{$partner->created_at}}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}">View</a> 
-                        <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary">Delete</button>
+                    @php
+                        $dists = App\Http\Controllers\PartnerInfoController::getStateNames($partner->state);
+                    @endphp
+
+                    @foreach ($dists as $dist)
+                        {{ $dist->state }},
+                    @endforeach
+                    </td>
+                    <td>{{($partner->status == 'y') ? 'Active' : 'Inactive'}}</td>
+                    <td>{{$partner->created_at->todatestring()}}</td>
+                    <td style="display:flex;">
+                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}"><i class="bi bi-eye"></i></a> &nbsp;
+                        <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary"><i class="bi bi-trash"></i></button>
                     </td>
                     </tr>
                     @endforeach

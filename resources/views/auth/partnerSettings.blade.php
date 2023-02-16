@@ -8,7 +8,7 @@
                 <h4>Partner Settings - Check Options</h4>
                 <div class="row">
                     <div class="col">
-                        <select name="cops" id="opsid" class="form-select">
+                        <select name="cops" id="opsid" class="form-control">
                             <option value="all" selected>All Options</option>
                             @foreach ($checkops as $k=>$v)
                             <option value="{{ $v->check_ops }}">{{ $v->check_ops }}</option>
@@ -36,7 +36,7 @@
                         <form action="{{ route('add.option') }}" method="post">
                             @csrf
                             <label for="cops">Select Option Name</label>
-                            <select name="cops" class="form-select">
+                            <select name="cops" class="form-control">
                                 <option selected>Select Option</option>
                                 @foreach ($checkops as $k=>$v)
                                 <option value="{{ $v->check_ops }}">{{ $v->check_ops }}</option>

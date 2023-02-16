@@ -16,6 +16,9 @@
         .nav a {
             color:#f7f7f7;
         }
+        .col-auto {
+            min-height: 100vh!important;
+        }
     </style>
     </head>
 

@@ -5,7 +5,7 @@
                 @include('layouts.sidebar')
             </div>
             <div class="col py-3">
-                <h4>Inactive CAC Partners</h4>
+                <h4>Pending CAC Partners</h4>
                  
                 <br>
                 <table class="table table-bordered" id="pinfos">
@@ -25,11 +25,11 @@
                     <td>{{$partner->partner_id}}</td>
                     <td>{{$partner->portal_id}}</td>
                     <td>{{$partner->partner_name}}</td>
-                    <td>{{$partner->partner_status}}</td>
-                    <td>{{$partner->created_at}}</td>
+                    <td>{{($partner->status == 'n') ? 'Inactive' : 'Active'}}</td>
+                    <td>{{$partner->created_at->todatestring()}}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}">View</a> 
-                        <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary">Delete</button>
+                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}"><i class="bi bi-eye"></i></a> 
+                        <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary"><i class="bi bi-trash"></i></button>
                     </td>
                     </tr>
                     @endforeach

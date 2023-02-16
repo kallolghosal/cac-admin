@@ -31,7 +31,7 @@
                             <div class="card-body">
                                 <h5 class="card-title">Total number of Pending Partners</h5>
                                 <p class="card-text">
-                                    Number of pending partners - {{ $partners['n'] }}
+                                    Number of pending partners - {{ $partners['p'] }}
                                 </p>
                                 <a href="{{ route('partners.inactive') }}" class="btn btn-primary">View Pending Partners</a>
                             </div>

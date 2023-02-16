@@ -8,6 +8,7 @@ use Session;
 use App\Models\User;
 use App\Models\PartnerInfo;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PartnerMaster;
 
 class CustomAuthController extends Controller
 {
@@ -67,9 +68,9 @@ class CustomAuthController extends Controller
  
     public function dashboard()
     {
-        $partner['y'] = PartnerInfo::where('partner_status', 'y')->count();
-        $partner['n'] = PartnerInfo::where('partner_status', 'n')->count();
-        $partner['r'] = PartnerInfo::count();
+        $partner['y'] = PartnerMaster::where('status', 'y')->count();
+        $partner['p'] = PartnerMaster::where('status', 'p')->count();
+        $partner['r'] = PartnerMaster::count();
         
         if(Auth::check()){
             return view('auth.dashboard', ['partners' => $partner]);

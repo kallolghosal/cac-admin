@@ -4,11 +4,12 @@
             
             <div class="col py-3">
                 <h4>Add New Partner</h4>
+                <small class="float-right">Fields marked with <span class="text-danger">*</span> are mandatory</small><br>
                 <form action="{{ route('add.partner') }}" class="form-control" method="post">
                     @csrf
                     <div class="row">
                         <div class="col">
-                            <label for="partnername">Name of Partner</label>
+                            <label for="partnername">Name of Partner <span class="text-danger">*</span></label>
                             <input type="text" name="partnername" class="form-control @error('partnername') is-invalid @enderror" value="{{ old('partnername') }}">
                             @error('partnername')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
@@ -20,7 +21,7 @@
                     <br>
                     <div class="row">
                         <div class="col">
-                            <label for="">Due Diligence</label>
+                            <label for="">Due Diligence <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'due_dilligence')
                                     <div class="form-check">
@@ -37,7 +38,7 @@
                         </div>
                         
                         <div class="col">
-                            <label for="">Organisation Type</label>
+                            <label for="">Organisation Type <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'org_type')
                                     <div class="form-check">
@@ -53,7 +54,7 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <label for="">Category Type</label>
+                            <label for="">Category Type <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'cat_type')
                                     <div class="form-check">
@@ -69,7 +70,7 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <label for="">VP Category</label>
+                            <label for="">VP Category <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'vp_cat')
                                     <div class="form-check">
@@ -88,9 +89,8 @@
                     <br>
                     <hr class="hr" />
                     <div class="row">
-                        
                         <div class="col">
-                            <label for="">Primary Thematic Area</label>
+                            <label for="">Primary Thematic Area <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'pri_theme_area')
                                     <div class="form-check">
@@ -106,7 +106,7 @@
                             @enderror
                         </div>
                         <div class="col">
-                            <label for="">Secondary Thematic Area</label>
+                            <label for="">Secondary Thematic Area <span class="text-danger">*</span></label>
                             @foreach ($checkops as $opk=>$opv)
                                 @if ($opv->check_ops == 'sec_theme_area')
                                     <div class="form-check">
@@ -129,62 +129,81 @@
                     <br>
                     <hr class="hr" />
                     <div class="row">
-                        <div class="col">
-                            <label for="addr">Address</label>
-                            <textarea name="addr" id="" cols="30" rows="10" class="form-control @error('addr') is-invalid @enderror"></textarea>
+                        <div class="col-3">
+                            <label for="addr">Communication Address <span class="text-danger">*</span></label>
+                            <textarea name="addr" id="" cols="30" rows="6" class="form-control @error('addr') is-invalid @enderror"></textarea>
                             @error('addr')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
-                        </div>
-                        <div class="col">
-                            <label for="state">State</label>
-                            <select name="state[]" id="drstate" class="form-control @error('state') is-invalid @enderror" multiple data-live-search="true" title="Select State">
-                                <option>Select State</option>
-                                @foreach ($states as $state)
-                                <option value="{{ $state->id }}" {{ old('state') == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('state')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
                             <br>
-                            <label for="dist">District</label>
-                            <select name="drdist[]" id="drdist" class="form-control @error('drdist') is-invalid @enderror" multiple data-live-search="true" title="Select District"></select>
-                            @error('drdist')
+                            <label for="addr">Registered Office <span class="text-danger">*</span></label>
+                            <textarea name="regoffice" id="regoffice" cols="30" rows="6" class="form-control @error('addr') is-invalid @enderror"></textarea>
+                            @error('regoffice')
                             <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col">
-                            <label for="dist">POC Name</label>
-                            <input type="text" name="pocname" id="" class="form-control @error('pocname') is-invalid @enderror">
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="state">State <span class="text-danger">*</span></label>
+                                    <select name="state[]" id="drstate" class="form-control @error('state') is-invalid @enderror" multiple data-live-search="true" title="Select State">
+                                        <option>Select State</option>
+                                        @foreach ($states as $state)
+                                        <option value="{{ $state->id }}" {{ old('state') == $state->id ? 'selected' : '' }}>{{ $state->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('state')
+                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                <div class="col">
+                                    <label for="dist">District <span class="text-danger">*</span></label>
+                                    <select name="drdist[]" id="drdist" class="form-control @error('drdist') is-invalid @enderror" multiple data-live-search="true" title="Select District"></select>
+                                    @error('drdist')
+                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
                             <br>
-                            <label for="dist">Alternate POC Name</label>
-                            <input type="text" name="altpocname" id="" class="form-control">
-                            <br>
-                            <label for="dist">POC Designation</label>
-                            <input type="text" name="pocdesg" id="" class="form-control">
-                            <br>
-                            <label for="dist">Website</label>
-                            <input type="text" name="website" id="" class="form-control">
-                        </div>
-                        <div class="col">
-                            <label for="dist">Email</label>
-                            <input type="email" name="email" id="" class="form-control @error('email') is-invalid @enderror">
-                            @error('email')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
-                            <br>
-                            <label for="dist">Mobile</label>
-                            <input type="text" name="mobile" id="" class="form-control @error('mobile') is-invalid @enderror">
-                            @error('mobile')
-                            <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
-                            @enderror
-                            <br>
-                            <label for="dist">Alternate POC Email</label>
-                            <input type="email" name="altpocemail" id="" class="form-control">
-                            <br>
-                            <label for="dist">Alternate POC Mobile</label>
-                            <input type="text" name="altpocmobile" id="" class="form-control">
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="dist">POC Name</label>
+                                    <input type="text" name="pocname" id="" class="form-control @error('pocname') is-invalid @enderror">
+                                    <br>
+                                    <label for="dist">Alternate POC Name</label>
+                                    <input type="text" name="altpocname" id="" class="form-control">
+                                    <br>
+                                    <label for="dist">POC Designation</label>
+                                    <input type="text" name="pocdesg" id="" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="dist">Email <span class="text-danger">*</span></label>
+                                    <input type="email" name="email" id="" class="form-control @error('email') is-invalid @enderror">
+                                    @error('email')
+                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                    <br>
+                                    <label for="dist">Alternate POC Email</label>
+                                    <input type="email" name="altpocemail" id="" class="form-control">
+                                    <br>
+                                    <label for="dist">Alt POC Designation</label>
+                                    <input type="text" name="altpocdesg" id="" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="dist">Mobile <span class="text-danger">*</span></label>
+                                    <input type="text" name="mobile" id="" class="form-control @error('mobile') is-invalid @enderror">
+                                    @error('mobile')
+                                    <div class="alert alert-danger mt-1 mb-1">{{ $message }}</div>
+                                    @enderror
+                                    <br>
+                                    <label for="dist">Alternate POC Mobile</label>
+                                    <input type="text" name="altpocmobile" id="" class="form-control">
+                                    <br>
+                                    <label for="dist">Website</label>
+                                    <input type="text" name="website" id="" class="form-control">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <br>
@@ -198,29 +217,6 @@
                     <hr class="hr" />
                     <div class="row">
                         <div class="col">
-                            <label for="">Node Type</label>
-                            @foreach ($checkops as $opk=>$opv)
-                                @if ($opv->check_ops == 'node_type')
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="{{ $opv->check_val }}" name="nodetype[]">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            {{ $opv->check_val }}
-                                        </label>
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                        <div class="col">
-                            <label for="">Node Status</label>
-                            <select class="form-control" name="nodestatus">
-                                <option selected>Select Node Status</option>
-                                @foreach ($checkops as $opk=>$opv)
-                                    @if ($opv->check_ops == 'node_status')
-                                    <option value="{{$opv->check_val}}">{{$opv->check_val}}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                            <br>
                             <label for="">Hear About Us</label>
                             <input type="text" name="hereaboutus" class="form-control">
                             <br>
@@ -229,10 +225,11 @@
                         </div>
                         <div class="col">
                             <label for="">Referrals</label>
-                            <textarea name="referrals" id="" cols="30" rows="10" class="form-control"></textarea>
+                            <textarea name="referrals" id="" cols="30" rows="6" class="form-control"></textarea>
                             <input type="hidden" name="distname" id="distname">
                             <input type="hidden" name="partnerid">
                         </div>
+                        <div class="col"></div>
                     </div>
                     <br>
                     <hr class="hr">

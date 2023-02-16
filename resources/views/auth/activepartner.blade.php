@@ -11,8 +11,7 @@
                     
                     <div class="col">
                         <label for="state">State</label>
-                        <select name="state" id="state" class="form-control">
-                            <option value='' selected>Select State</option>
+                        <select name="state[]" id="state" class="form-control" multiple data-live-search="true">
                             @foreach ($states as $state)
                             <option value="{{$state->id}}">{{$state->name}}</option>
                             @endforeach
@@ -20,8 +19,7 @@
                     </div>
                     <div class="col">
                         <label for="dist">District</label>
-                        <select name="dist" id="dist" class="form-control">
-                            <option value='' selected>Select District</option>
+                        <select name="dist[]" id="dist" class="form-control" multiple data-live-search="true">
                         </select>
                     </div>
                     <div class="col">
@@ -53,11 +51,11 @@
                     <td>{{$partner->partner_id}}</td>
                     <td>{{$partner->portal_id}}</td>
                     <td>{{$partner->partner_name}}</td>
-                    <td>{{($partner->partner_status == 'y') ? 'Active' : 'Inactive'}}</td>
-                    <td>{{$partner->created_at}}</td>
+                    <td>{{($partner->status == 'y') ? 'Active' : 'Inactive'}}</td>
+                    <td>{{$partner->created_at->todatestring()}}</td>
                     <td>
-                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}">View</a> 
-                        <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary">Delete</button>
+                        <a class="btn btn-sm btn-primary" href="{{ route('partner.view', $partner->partner_id) }}"><i class="bi bi-eye"></i></a> 
+                        <!-- <button id="btnDelete" onclick="deletePartner('{{$partner->partner_name}}')" class="btn btn-sm btn-primary">Delete</button> -->
                     </td>
                     </tr>
                     @endforeach
@@ -75,6 +73,20 @@
             alert(pname +' deleted successfully');
         }
     }
+
+    $('#state').selectpicker({
+        nonSelectedText: 'Select State',
+        includeSelectAllOption: true,
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true
+    });
+
+    $('#dist').selectpicker({
+        nonSelectedText: 'Select District',
+        includeSelectAllOption: true,
+        enableFiltering: true,
+        enableCaseInsensitiveFiltering: true
+    });
 
     // filter with state and load district
     $("#state").on('change', function() {
@@ -94,6 +106,7 @@
             type: "POST",
             data: {
                 stid: state,
+                status: 'y',
                 _token: '{{csrf_token()}}'
             },
             dataType: 'json',
@@ -102,13 +115,16 @@
                 var tdr = '<thead><tr><td>ID</td><td>Portal ID</td><td>Name</td><td>Status</td><td>Created Dt</td><td>Action</td></tr></thead>';
                 $("#pinfos").append(tdr);
                 $.each(res.pinfos, function (key, val) {
-                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>'+val.partner_status+'</td><td>'+val.created_at+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
+                    var crdt = new Date(val.created_at).toLocaleDateString();
+                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>Active</td><td>'+crdt+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
                 });
                 
                 $('#dist').html('<option value="">Select District</option>');
                 $.each(res.dists, function (k,v) {
                     $("#dist").append('<option value="' + v.id + '">' + v.name + '</option>');
                 });
+                $("#dist").selectpicker("refresh");
+                $('.bs-select-all').html("All");
             },
             error: function (xhr) {
                 console.log(xhr.responseText);
@@ -133,6 +149,7 @@
             data: {
                 statid: statid,
                 distid: distid,
+                status: 'y',
                 _token: '{{csrf_token()}}'
             },
             dataType: 'json',
@@ -140,7 +157,8 @@
                 var tdr = '<thead><tr><td>ID</td><td>Portal ID</td><td>Name</td><td>Status</td><td>Created Dt</td><td>Action</td></tr></thead>';
                 $("#pinfos").append(tdr);
                 $.each(resp.infos, function (key, val) {
-                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>'+val.partner_status+'</td><td>'+val.created_at+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
+                    var crdt = new Date(val.created_at).toLocaleDateString();
+                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>Active</td><td>'+crdt+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
                 });
                 console.log(resp);
             },
@@ -196,7 +214,8 @@
                 var tdr = '<thead><tr><td>ID</td><td>Portal ID</td><td>Name</td><td>Status</td><td>Created Dt</td><td>Action</td></tr></thead>';
                 $("#pinfos").append(tdr);
                 $.each(res.pinfos, function (key, val) {
-                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>'+val.partner_status+'</td><td>'+val.created_at+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
+                    var crdt = new Date(val.created_at).toLocaleDateString();
+                    $("#pinfos").append('<tr><td>'+val.partner_id+'</td><td>'+val.portal_id+'</td><td>'+val.partner_name+'</td><td>'+val.status+'</td><td>'+crdt+'</td><td><a href="partner-view/'+val.partner_id+'" class="btn btn-primary btn-sm">edit</a></td></tr>');
                 });
             },
             error: function (xhr) {
